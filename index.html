@@ -10,6 +10,17 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css">
     <title>You Can Do It List</title>
+    <style>
+        .taskComplete {
+            color: blue;
+            font-style: italic;
+        }
+
+        .taskPending {
+            color: black;
+            font-style: normal;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,12 +29,14 @@
             <div class="card-body">
                 <h3 class="card-title">You can do it!</h3>
                 <p class="card-text">
-                    <input v-model="newTask">
+                    <input v-model="newTask" v-on:keyup.enter="addTask">
                     <button v-on:click="addTask">Add a task</button>
                 <ol style="list-style:none">
                     <li v-for="task in taskList">
-                        <input v-if="task.taskName !=''" type="checkbox" v-model="task.taskComplete">
-                        {{task.taskName}}
+                        <input v-if="task.taskName" type="checkbox" v-model="task.taskComplete">
+                        <span v-if="task.taskComplete == true" class="taskComplete">{{task.taskName}}</span>
+                        <span v-else class="taskPending">{{task.taskName}}</span>
+                        <span v-if="task.taskName" v-on:click="deleteTask(task)">&times;</span>
                     </li>
                 </ol>
 
@@ -37,32 +50,22 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
-        // function addTask() {
-        //     if (newTask.value) {
-        //         let taskList = document.getElementById("taskList");
-        //         let addingElement = "<li><span class=\"delete\" onclick=\"deleteTask(event)\">&times;</span><input type=\"checkbox\" class=\"done\" id=\"theCheckbox\" onclick=\"completeTask(event)\"> " + `<label>${newTask.value}</label>` + " </li>";
-        //         taskList.innerHTML += addingElement;
-        //         newTask.value = null;
-        //         document.getElementById("aNewDay").hidden = true;
-        //         document.getElementById("oops").hidden = true;
-        //         document.getElementById("goodJob").hidden = true;
-        //     }
-        // }
 
         let vueApp = new Vue({
             el: "#vueApp",
             data: {
                 newTask: null,
-                taskList: [
+                taskList: [             //when reset don't have to add like this because already initialized so ok
                     {
                         taskName: '',
-                        taskComplete: false
+                        taskComplete: false,
+                        priority: 0,
                     },
                 ]
             },
             methods: {
                 addTask: function () {
-                    if (this.newTask != '' && this.newTask != null) {
+                    if (this.newTask != null) {
                         this.taskList.push({
                             taskName: this.newTask,
                             taskComplete: false
@@ -73,54 +76,15 @@
                 //                 completeTask: function () {
 
                 //                 },
-                //                 deleteTask: function () {
-
-                //                 },
+                deleteTask: function (task) {
+                    let index = this.taskList.indexOf(task);
+                    this.taskList.splice(index, 1);
+                },
                 deleteAll: function () {
-                    this.taskList = [{
-                        taskName: '',
-                        taskComplete: false
-                    }];
+                    this.taskList = [];
                 },
             }
         })
-
-        function completeTask(event) {
-            let checkbox = event.target;
-            let text = checkbox.nextSibling.nextSibling;   //the actual text as a string
-
-            if (checkbox.checked == true) {
-                text.style.fontStyle = "italic";
-                text.style.color = "blue";
-                // console.log("sweet");
-                document.getElementById("oops").hidden = true;
-                document.getElementById("aNewDay").hidden = true;
-                document.getElementById("goodJob").hidden = false;
-            }
-            if (checkbox.checked == false) {
-                text.style.fontStyle = "normal";
-                text.style.color = "black";
-                // console.log("crud")
-                document.getElementById("oops").hidden = false;
-                document.getElementById("aNewDay").hidden = true;
-                document.getElementById("goodJob").hidden = true;
-            }
-        }
-
-        function deleteTask(event) {
-            let taskList = document.getElementById("taskList");
-            let thisTask = event.target.parentNode
-            taskList.removeChild(thisTask);
-        }
-
-        // function deleteAll() {
-        //     let taskListParent = document.getElementById("taskListParent");
-        //     taskListParent.removeChild(taskList);
-        //     taskListParent.innerHTML = "<ol style=\"list-style:none\" id=\"taskList\"></ol>";
-        //     document.getElementById("aNewDay").hidden = false;
-        //     document.getElementById("oops").hidden = true;
-        //     document.getElementById("goodJob").hidden = true;
-        // }
 
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
