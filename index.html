@@ -33,17 +33,16 @@
                     <button v-on:click="addTask">Add a task</button>
                 <ol style="list-style:none">
                     <li v-for="task in taskList">
-                        <input v-if="task.taskName" type="checkbox" v-model="task.taskComplete">
+                        <input v-if="task.taskName" type="checkbox" v-model="task.taskComplete"
+                            v-on:change="onChangeDisplay(task)">
                         <span v-if="task.taskComplete == true" class="taskComplete">{{task.taskName}}</span>
                         <span v-else class="taskPending">{{task.taskName}}</span>
                         <span v-if="task.taskName" v-on:click="deleteTask(task)">&times;</span>
                     </li>
                 </ol>
 
+                <h4>{{displayMessage}}</h4>
                 <button v-on:click="deleteAll">Delete list</button>
-                <H4 hidden id="goodJob">Good job!</H4>
-                <H4 hidden id="aNewDay">Tomorrow is a new day</H4>
-                <H4 hidden id="oops">Oops I (gotta do) it again</H4>
                 </p>
             </div>
         </div>
@@ -55,6 +54,13 @@
             el: "#vueApp",
             data: {
                 newTask: null,
+                displayMessage: null,
+                message:
+                {
+                    goodJob: "Good job!",
+                    aNewDay: "Tomorrow is a new day",
+                    oops: "Oops I (gotta do) it again"
+                },
                 taskList: [             //when reset don't have to add like this because already initialized so ok
                     {
                         taskName: '',
@@ -65,6 +71,7 @@
             },
             methods: {
                 addTask: function () {
+                    this.displayMessage = null;
                     if (this.newTask != null) {
                         this.taskList.push({
                             taskName: this.newTask,
@@ -73,17 +80,20 @@
                         this.newTask = null;
                     }
                 },
-                //                 completeTask: function () {
-
-                //                 },
                 deleteTask: function (task) {
                     let index = this.taskList.indexOf(task);
                     this.taskList.splice(index, 1);
+                    this.displayMessage = this.message.goodJob;
                 },
                 deleteAll: function () {
                     this.taskList = [];
+                    this.displayMessage = this.message.aNewDay;
                 },
-            }
+                onChangeDisplay: function (task) {
+                    this.displayMessage = task.taskComplete ?
+                        this.message.goodJob : this.message.oops;
+                }
+            },
         })
 
     </script>
