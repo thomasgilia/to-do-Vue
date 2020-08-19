@@ -46,16 +46,21 @@
         .hidden {
             color: #fff
         }
-
     </style>
 </head>
 
 <body>
     <div class="container" style="width: 100rem;">
         <div id="vueApp">
+            <br>
             <h3 class="centerText">You can do it!</h3>
+            <br>
             <input v-model="newTask" v-on:keyup.enter="addTask">
             <button type="button" class="btn btn-secondary" v-on:click="addTask">Add a task</button>
+            &nbsp; &nbsp; &nbsp;
+            <button type="button" class="btn btn-danger" v-on:click="deleteAll">Delete list</button>
+            <button type="button" class="btn btn-secondary" v-on:click="arrange">Sort list</button>
+
             <br></br>
             <table class="table table-striped table-dark">
                 <thead>
@@ -91,8 +96,6 @@
                 <span v-if="displayMessage == null" class="hidden">Space-holder</span>
                 <span v-else>{{displayMessage}}</span>
             </h4>
-            <button type="button" class="btn btn-danger" v-on:click="deleteAll">Delete list</button>
-            <button type="button" class="btn btn-secondary" v-on:click="arrange">Sort list</button>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
