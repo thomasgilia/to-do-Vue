@@ -42,6 +42,11 @@
         .medium {
             color: rgb(255, 118, 118);
         }
+
+        .hidden {
+            color: #fff
+        }
+
     </style>
 </head>
 
@@ -82,7 +87,10 @@
                 </tbody>
             </table>
 
-            <h4 class="centerText">{{displayMessage}}</h4>
+            <h4 class="centerText">
+                <span v-if="displayMessage == null" class="hidden">Space-holder</span>
+                <span v-else>{{displayMessage}}</span>
+            </h4>
             <button type="button" class="btn btn-danger" v-on:click="deleteAll">Delete list</button>
             <button type="button" class="btn btn-secondary" v-on:click="arrange">Sort list</button>
         </div>
